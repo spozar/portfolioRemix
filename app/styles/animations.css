@@ -1,0 +1,19 @@
+.blinking-cursor {
+	display: inline-block;
+	width: 10px;
+	height: 72px;
+	color: white;
+	animation: blink 1s step-end infinite;
+}
+
+.fade-in-text {
+	background: linear-gradient(
+		to right,
+		rgba(255, 255, 255, 0) 50%,
+		rgba(255, 255, 255, 1) 50%
+	);
+	background-clip: text;
+	-webkit-background-clip: text;
+	color: transparent;
+	animation: fadeInLeftToRight;
+}
