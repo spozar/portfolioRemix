@@ -3,45 +3,30 @@ import { useEffect, useState } from 'react';
 const ProfileTile = () => {
 	const firstName = ['S', 'a', 'n', 'd', 'r', 'o', ' '];
 	const lastName = ['P', 'o', 'ž', 'a', 'r'];
-	const [visibleFirstName, setVisibleFirstName] = useState(
-		Array(firstName.length).fill(false)
+	const [visibleChars, setVisibleChars] = useState(
+		firstName.concat(lastName).map(() => false) // Create an array of false values
 	);
-	const [visibleLastName, setVisibleLastName] = useState(
-		Array(lastName.length).fill(false)
-	);
+	const [firstNameComplete, setFirstNameComplete] = useState(false);
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			setVisibleFirstName((prev) => {
+			setVisibleChars((prev) => {
 				const next = [...prev];
 				const nextIndex = next.indexOf(false);
+
 				if (nextIndex !== -1) {
 					next[nextIndex] = true;
-				} else {
-					clearInterval(interval);
-					animateLastName();
+					if (nextIndex === firstName.length - 1) {
+						setFirstNameComplete(true);
+					}
 				}
+
 				return next;
 			});
 		}, 200);
 
 		return () => clearInterval(interval);
-	}, []);
-
-	const animateLastName = () => {
-		const interval = setInterval(() => {
-			setVisibleLastName((prev) => {
-				const next = [...prev];
-				const nextIndex = next.indexOf(false);
-				if (nextIndex !== -1) {
-					next[nextIndex] = true;
-				} else {
-					clearInterval(interval);
-				}
-				return next;
-			});
-		}, 200);
-	};
+	}, [firstName.length]);
 
 	return (
 		<div className="flex flex-col md:flex-row justify-center items-start">
@@ -51,7 +36,7 @@ const ProfileTile = () => {
 						key={index}
 						className="text-8xl font-bold text-gray-100"
 						style={{
-							opacity: visibleFirstName[index] ? 0.8 : 0,
+							opacity: visibleChars[index] ? 0.8 : 0,
 							transition: 'opacity 0.5s',
 							userSelect: 'none',
 						}}
@@ -63,10 +48,14 @@ const ProfileTile = () => {
 			<div className="flex">
 				{lastName.map((char, index) => (
 					<h1
-						key={index}
+						key={index + firstName.length} // adjust key based on combined array
 						className="text-8xl font-bold text-gray-100 -mt-3 md:mt-0"
 						style={{
-							opacity: visibleLastName[index] ? 0.8 : 0,
+							opacity:
+								firstNameComplete &&
+								visibleChars[index + firstName.length]
+									? 0.8
+									: 0,
 							transition: 'opacity 0.5s',
 							userSelect: 'none',
 						}}
